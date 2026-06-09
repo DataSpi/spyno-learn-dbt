@@ -22,8 +22,9 @@ clean-targets: # khi chạy `dbt clean` mấy folder này sẽ bị xóa
 
 
 on-run-start:
-  - "CREATE TABLE IF NOT EXISTS {{ target.schema }}.audit_log ( model_name STRING, run_timestamp TIMESTAMP )"
-
+  # - "CREATE TABLE IF NOT EXISTS {{ target.schema }}.audit_log ( model_name STRING, run_timestamp TIMESTAMP )"
+  - "CREATE TABLE IF NOT EXISTS airbnb.audit_log (model_name varchar(255), run_timestamp TIMESTAMP )" 
+  # sửa lại vì mình dùng postgres. 
 
 
 seeds:
@@ -33,7 +34,11 @@ seeds:
 
 models:
   airbnb:
+    +materialized: view #  mode mặc định là view, từng model cụ thể thế nào thì override ở dưới
     src:
       +materialized: ephemeral
+      # +materialized: view
     dim:
+      +materialized: table
+    fct:
       +materialized: table
