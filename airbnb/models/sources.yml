@@ -8,4 +8,8 @@ sources:
         identifier: raw_listings
       - name: reviews
         identifier: raw_reviews
-        
+        config: 
+          loaded_at_field: "CAST(date AS TIMESTAMP)" # do cột này là str nên phải convert qua timestamp
+          freshness:
+            warn_after: {count: 1, period: hour}
+            error_after: {count: 24, period: hour}
