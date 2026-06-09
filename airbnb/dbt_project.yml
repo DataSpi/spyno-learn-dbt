@@ -1,0 +1,39 @@
+name: 'airbnb'
+version: '1.0.0'
+
+# profile đã được setup trong ~/.dbt/profiles.yml đây là chọn profile sử dụng cho project này. 
+profile: 'airbnb'
+
+
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+asset-paths: ["assets"]
+
+
+
+clean-targets: # khi chạy `dbt clean` mấy folder này sẽ bị xóa
+  - "target"
+  - "dbt_packages"
+
+
+on-run-start:
+  - "CREATE TABLE IF NOT EXISTS {{ target.schema }}.audit_log ( model_name STRING, run_timestamp TIMESTAMP )"
+
+
+
+seeds:
+  # Builds seeds into '<your_schema_name>_raw'
+  airbnb:
+    +schema: raw_airbnb
+
+models:
+  airbnb:
+    src:
+      +materialized: ephemeral
+    dim:
+      +materialized: table
